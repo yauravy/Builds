@@ -45,7 +45,7 @@ export default class Coin extends Component {
               <td className="c">${this.state.price}</td>
               <td>
                   <form action="#" method="POST">
-                      <button onClick={this.handleClick}>Refresh</button>
+                      <button className="btn btn-primary"onClick={this.handleClick}>Refresh</button>
                   </form>
               </td>
             </tr>

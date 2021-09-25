@@ -1,4 +1,5 @@
 import Coin from './components/Coin/Coin';
+import AccountBalance from './components/AccountBalance/AccountBalance';
 import './App.css';
 import logo from './solana.png';
 
@@ -12,6 +13,7 @@ function App() {
           Gold Exchange
         </h1>
       </header>
+      <AccountBalance amount={10000} />
       <table className="table">
         <thead>
           <tr>
