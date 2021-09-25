@@ -1,0 +1,31 @@
+.coin-row td{
+    border: 1px solid black;
+    width: 25vh;
+    flex-direction: row;
+}
+
+.coin-row td.a {
+    flex-direction: row;
+    border: 1px solid #00FFA3;
+    width: 25vh;
+}
+
+.coin-row td.b {
+    flex-direction: row;
+    border: 1px solid #03E1FF;
+    width: 35vh;
+}
+
+.coin-row td.c {
+    display: block flex;
+    flex-direction: row;
+    border: 1px solid #DC1FFF;
+    width: 35vh;
+}
+
+.coin-row td.button {
+    
+    flex-direction: row;
+    width: 25vh;
+
+}
