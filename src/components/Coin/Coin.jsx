@@ -1,54 +1,75 @@
 import React, { Component } from 'react';
-import './coin.css';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const Tr = styled.tr`
+    border: 2px solid black;
+    width: 25vh;
+    flex-direction: row;
+`;
+
+const Td = styled.td`
+    flex-direction: row;
+    border: 2px solid #00FFA3;
+    width: 25vh;
+`;
+
+const Td1 = styled.td`
+    flex-direction: row;
+    border: 2px solid #03E1FF;
+    width: 35vh;
+`;
+
+const Td2 = styled.td`
+    display: block flex;
+    flex-direction: row;
+    border: 2px solid #DC1FFF;
+    width: 35vh;
+`;
+
+const Td3 = styled.td`
+    border: 2px solid black;
+    width: 25vh;
+    flex-direction: row;
+`;
+
+const Button = styled.button`
+    border-radius: 5px;
+    border: 2px solid #DC1FFF;
+    flex-direction: row;
+    background-size: 100%;
+    background-repeat: repeat;
+    background-image: linear-gradient(45deg, #00FFA3, #03E1FF, #DC1FFF );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-background-clip: text;
+    -moz-text-fill-color: transparent;
+`;
 
 export default class Coin extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            price: this.props.price
-        }
         this.handleClick = this.handleClick.bind(this);
     }
-    /*
-    componentDidMount(){
-        const callback = () => {
-           // set the state to a new random value
-            const randomPercentage = 0.995 + Math.random() * 0.1;
-
-            this.setState( function(oldState) {
-                return {
-                    price: oldState.price * randomPercentage
-                }
-            })
-        }
-        setInterval( callback, 1000);
-    }     
-    */
        
     handleClick(event) {
         event.preventDefault();
+        this.props.handleRefresh(this.props.ticker);
 
-        const randomPercentage = 0.995 + Math.random() * 0.1; 
-        this.setState( function(oldState) {
-            return {
-                price: oldState.price * randomPercentage
-            };
-        });
     }
 
     render () {
         return (
-            <tr className="coin-row">
-              <td className="a">{this.props.name}</td>
-              <td className="b">{this.props.ticker}</td>
-              <td className="c">${this.state.price}</td>
-              <td>
+            <Tr>
+              <Td>{this.props.name}</Td>
+              <Td1>{this.props.ticker}</Td1>
+              <Td2>${this.props.price}</Td2>
+              <Td3>
                   <form action="#" method="POST">
-                      <button className="btn btn-primary"onClick={this.handleClick}>Refresh</button>
+                      <Button onClick={this.handleClick}>Refresh</Button>
                   </form>
-              </td>
-            </tr>
+              </Td3>
+            </Tr>
         );
     }    
 }
