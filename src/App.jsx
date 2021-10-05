@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import CoinList from './components/CoinList/CoinList';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 import styled from 'styled-components';
+import axios from 'axios';
 
 
 const Div = styled.div`
@@ -10,76 +11,74 @@ const Div = styled.div`
   background-color:whitesmoke;
 `;
 
+const COIN_COUNT = 10;
+const formatPrice = price => parseFloat(Number(price).toFixed(2));
 
-class App extends React.Component {
-  state = {
-    balance: 1000,
-    showBalance: true,
-    coinData: [
-      {
-        name: 'Bitcoin',
-        ticker: 'BTC',
-        balance: 10,
-        price: 10000.00
-      },
-      {
-        name: 'Ethereum',
-        ticker: 'ETH',
-        balance: 20,
-        price: 3800.00
-      },
-      {
-        name: 'Solana',
-        ticker: 'SOL',
-        balance: 1000,
-        price: 1000.00
-      },
-      {
-        name: 'Cardano',
-        ticker: 'ADA',
-        balance: 10000,
-        price: 10.00
-      }
-    ]
-  }
+function App(props) {
 
-  handleBalanceVisibilityChange = () => {
-    this.setState( function(oldState) {
+  const [balance, setBalance] = useState(10000);
+  const [showBalance, setShowBalance] = useState(true);
+  const [coinData, setCoinData] = useState([]);
+
+  const componentDidMount = async () => {
+    const response = await axios.get('https://api.coinpaprika.com/v1/coins');
+    const coinIds = response.data.slice(0, COIN_COUNT).map(coin => coin.id);
+    const tickerUrl = 'https://api.coinpaprika.com/v1/tickers/';
+    const promises = coinIds.map(id => axios.get(tickerUrl + id));
+    const coinData =  await Promise.all(promises);
+    const coinPriceData = coinData.map(function(response) {
+      const coin = response.data;
       return {
-        ...oldState,
-        showBalance: !oldState.showBalance
-      }
-    });
+        key: coin.id,
+        name: coin.name,
+        ticker: coin.symbol,
+        balance: 0,
+        price: formatPrice(coin.quotes.USD.price),
+      };
+    })
+    // retrieve prices
+    setCoinData(coinPriceData);
   }
 
-    handleRefresh = (valueChangeTicker) => {
-      const newCoinData = this.state.coinData.map( function( values ) {
+  useEffect(function() {
+    if (coinData.length === 0) {
+      // component did mount
+      componentDidMount();
+    } 
+  });
+
+  const handleBalanceVisibilityChange = () => {
+    setShowBalance(oldValue => !oldValue);
+  }
+
+    const handleRefresh = async (valueChangeId) => {
+      const tickerUrl = `https://api.coinpaprika.com/v1/tickers/${valueChangeId}`;
+      const response = await axios.get(tickerUrl);
+      const newPrice = formatPrice(response.data.quotes.USD.price);
+      const newCoinData = coinData.map( function( values ) {
         let newValues = { ...values};
-        if (valueChangeTicker === values.ticker) {
-          const randomPercentage = 0.995 + Math.random() * 0.1; 
-                  newValues.price *= randomPercentage;
+        if (valueChangeId === values.key) {
+            newValues.price = newPrice;
       }
       return newValues;
     });
-    this.setState({ coinData: newCoinData });
+    setCoinData(newCoinData);
   }
 
-  render() {
-    return (
-      <Div>
-        <Header />
-        <AccountBalance 
-          amount={this.state.balance} 
-          showBalance={this.state.showBalance}
-          handleBalanceVisibilityChange={this.handleBalanceVisibilityChange} 
-        />
-        <CoinList 
-          coinData={this.state.coinData} 
-          showBalance={this.state.showBalance}
-          handleRefresh={this.handleRefresh} />
-      </Div>
-    );
-  }
+  return (
+    <Div>
+      <Header />
+      <AccountBalance 
+        amount={balance} 
+        showBalance={showBalance}
+        handleBalanceVisibilityChange={handleBalanceVisibilityChange} 
+      />
+      <CoinList 
+        coinData={coinData} 
+        showBalance={showBalance}
+        handleRefresh={handleRefresh} />
+    </Div>
+  );
 }
 
 

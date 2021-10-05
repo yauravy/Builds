@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -12,7 +12,7 @@ const Tr = styled.tr`
 
 const Td = styled.td`
     flex-direction: row;
-    border: 2px solid #00FFA3;
+    border: 2px solid black;
     width: 25vh;
     border-radius: 17px;
 
@@ -20,7 +20,7 @@ const Td = styled.td`
 
 const Td1 = styled.td`
     flex-direction: row;
-    border: 2px solid #03E1FF;
+    border: 2px solid black;
     width: 35vh;
     border-radius: 17px;
 
@@ -29,7 +29,7 @@ const Td1 = styled.td`
 const Td2 = styled.td`
     display: block flex;
     flex-direction: row;
-    border: 2px solid #DC1FFF;
+    border: 2px solid black;
     width: 55vh;
     border-radius: 17px;
 
@@ -44,7 +44,7 @@ const Td3 = styled.td`
 `;
 
 const Button = styled.button`
-border: 2px solid #DC1FFF;
+
     border-radius: 5px;
     flex-direction: row;
     background-size: 100%;
@@ -60,34 +60,31 @@ border: 2px solid #DC1FFF;
 
 const Td4 = styled.td`
     flex-direction: row;
-    border: 2px solid #00FFA3;
+    border: 2px solid black;
     width: 25vh;
     border-radius: 17px;
 `;
 
-export default class Coin extends Component {
+export default function Coin(props) {
        
-    handleClick = (event) => {
+    const handleClick = (event) => {
         event.preventDefault();
-        this.props.handleRefresh(this.props.ticker);
+        props.handleRefresh(props.tickerId);
 
     }
-
-    render () {
-        return (
-            <Tr>
-              <Td>{this.props.name}</Td>
-              <Td1>{this.props.ticker}</Td1>
-              <Td2>${this.props.price}</Td2>
-              {this.props.showBalance ? <Td4>{this.props.balance}</Td4> : null}
-              <Td3>
-                  <form action="#" method="POST">
-                      <Button onClick={this.handleClick}>Refresh</Button>
-                  </form>
-              </Td3>
-            </Tr>
-        );
-    }    
+    return (
+        <Tr>
+            <Td>{props.name}</Td>
+            <Td1>{props.ticker}</Td1>
+            <Td2>${props.price}</Td2>
+            {props.showBalance ? <Td4>{props.balance}</Td4> : null}
+            <Td3>
+                <form action="#" method="POST">
+                    <Button onClick={handleClick}>Refresh</Button>
+                </form>
+            </Td3>
+        </Tr>
+    );
 }
 
 Coin.propTypes = {
